@@ -1,0 +1,2133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Planning & PR Portal - PT Wijaya Karya Realty</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            wika: {
+              navy: '#102A45',
+              dark: '#0B1E32',
+              cyan: '#00A3E0',
+              cyanHover: '#008ec4',
+              gold: '#D4AF37',
+              gray: '#64748B',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+    .calendar-grid {
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    /* Elegant Micro-interaction & Ripple Styling */
+    .click-ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 163, 224, 0.4) 0%, rgba(255, 255, 255, 0.5) 45%, rgba(0, 163, 224, 0) 75%);
+      transform: scale(0);
+      pointer-events: none;
+      animation: ripple-anim 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    @keyframes ripple-anim {
+      to {
+        transform: scale(2.8);
+        opacity: 0;
+      }
+    }
+
+    .stat-bump {
+      animation: stat-pulse 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes stat-pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.18); color: #00A3E0; }
+      100% { transform: scale(1); }
+    }
+
+    .modal-backdrop-anim {
+      animation: fadeInModal 0.22s ease-out;
+    }
+    .modal-content-anim {
+      animation: zoomInModal 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes fadeInModal {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes zoomInModal {
+      from { opacity: 0; transform: scale(0.94); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="bg-slate-100/80 text-slate-800 antialiased min-h-screen flex flex-col font-sans select-none">
+
+  <!-- Header Bar -->
+  <header class="bg-wika-dark text-white border-b border-slate-700/60 sticky top-0 z-40 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Brand & Logo -->
+        <div class="flex items-center space-x-4">
+          <a href="https://share.google/3d4a6ZfwOFuWa9yzw" target="_blank" rel="noopener noreferrer" title="Buka tautan logo" class="flex items-center bg-white/5 hover:bg-white/10 border border-white/10 px-2.5 py-1.5 rounded-xl shadow-inner backdrop-blur-sm transition">
+            <img src="https://share.google/3d4a6ZfwOFuWa9yzw" alt="PT Wijaya Karya Realty" class="h-8 sm:h-9 w-auto max-w-[140px] object-contain rounded-md" onerror="this.onerror=null; this.src='https://placehold.co/120x36/102A45/00A3E0?text=WIKA+Realty';">
+          </a>
+          <div class="border-l border-slate-700 h-8 hidden sm:block"></div>
+          <div>
+            <h1 class="text-sm sm:text-base font-bold text-white tracking-wide">Content Planning Sosial Media & Media Massa WIKA Realty</h1>
+            <p class="text-xs text-wika-cyan font-medium flex items-center gap-1.5">
+              <span id="headerPeriodBadge" class="bg-wika-cyan/20 text-wika-cyan px-2 py-0.5 rounded text-[10px] font-semibold">Portal Berkelanjutan</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="flex items-center space-x-2.5">
+          <button onclick="openModal('content')" class="bg-wika-cyan hover:bg-wika-cyanHover text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl flex items-center gap-2 shadow-md shadow-wika-cyan/20 transition-all active:scale-95">
+            <i class="fa-solid fa-plus"></i>
+            <span class="hidden sm:inline">Tambah Konten</span>
+          </button>
+          <button onclick="openModal('press')" class="bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-semibold px-3 py-2 rounded-xl flex items-center gap-2 border border-white/15 transition-all active:scale-95">
+            <i class="fa-regular fa-newspaper"></i>
+            <span class="hidden md:inline">Tambah Siaran Pers</span>
+          </button>
+          <button onclick="exportToCSV()" title="Ekspor Data Rekap CSV" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-semibold p-2 sm:px-3 sm:py-2 rounded-xl flex items-center gap-2 shadow-sm transition-all active:scale-95">
+            <i class="fa-solid fa-file-excel"></i>
+            <span class="hidden lg:inline">Ekspor Excel/CSV</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-1 space-y-6">
+
+    <!-- KPI Metric Cards -->
+    <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
+      <!-- Total Konten Medsos -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between transition-all hover:border-wika-cyan/40">
+        <div>
+          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Total Konten Medsos</p>
+          <h3 id="stat-total" class="text-2xl font-bold text-wika-dark mt-0.5">0</h3>
+          <p class="text-[10px] text-emerald-600 font-semibold mt-1"><i class="fa-solid fa-calendar-check"></i> Aktif Terjadwal</p>
+        </div>
+        <div class="w-11 h-11 rounded-xl bg-blue-50 text-wika-cyan flex items-center justify-center text-lg">
+          <i class="fa-solid fa-share-nodes"></i>
+        </div>
+      </div>
+
+      <!-- Property -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between transition-all hover:border-indigo-300">
+        <div>
+          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Property</p>
+          <h3 id="stat-prop" class="text-2xl font-bold text-wika-dark mt-0.5">0</h3>
+          <p class="text-[10px] text-indigo-600 font-medium mt-1">Portofolio Properti</p>
+        </div>
+        <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-house-chimney"></i>
+        </div>
+      </div>
+
+      <!-- Real Estat (Low & High Rise) -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between transition-all hover:border-cyan-300">
+        <div>
+          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Real Estat</p>
+          <h3 id="stat-re" class="text-2xl font-bold text-wika-dark mt-0.5">0</h3>
+          <p class="text-[10px] text-slate-500 font-medium mt-1">High & Low Rise</p>
+        </div>
+        <div class="w-11 h-11 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-building"></i>
+        </div>
+      </div>
+
+      <!-- Hotel & Hospitality -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between transition-all hover:border-amber-300">
+        <div>
+          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Hotel & MICE</p>
+          <h3 id="stat-hotel" class="text-2xl font-bold text-wika-dark mt-0.5">0</h3>
+          <p class="text-[10px] text-amber-600 font-medium mt-1">Hospitality</p>
+        </div>
+        <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-hotel"></i>
+        </div>
+      </div>
+
+      <!-- Building Management -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between transition-all hover:border-purple-300">
+        <div>
+          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Building Mgt</p>
+          <h3 id="stat-bm" class="text-2xl font-bold text-wika-dark mt-0.5">0</h3>
+          <p class="text-[10px] text-purple-600 font-medium mt-1">Facility Services</p>
+        </div>
+        <div class="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-city"></i>
+        </div>
+      </div>
+
+      <!-- Siaran Pers / PR -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between col-span-2 md:col-span-1 lg:col-span-1 transition-all hover:border-emerald-300">
+        <div>
+          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Total Siaran Pers</p>
+          <h3 id="stat-pr" class="text-2xl font-bold text-wika-dark mt-0.5">0</h3>
+          <p class="text-[10px] text-blue-600 font-semibold mt-1">Media Relations</p>
+        </div>
+        <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-newspaper"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation & Quick Filters Toolbar -->
+    <div class="bg-white p-2 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
+      
+      <!-- Tab Buttons with Document Repository Tab -->
+      <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 md:pb-0">
+        <button onclick="changeTab('calendar')" id="tab-btn-calendar" class="tab-btn active px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all bg-wika-navy text-white shadow-sm">
+          <i class="fa-regular fa-calendar-days text-wika-cyan"></i>
+          <span>Kalender Tracker</span>
+        </button>
+        <button onclick="changeTab('content')" id="tab-btn-content" class="tab-btn px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-medium text-slate-600 hover:text-wika-dark hover:bg-slate-100 flex items-center gap-2 transition-all">
+          <i class="fa-solid fa-table-list"></i>
+          <span>Tabel Konten</span>
+          <span id="tabCountContent" class="bg-slate-200 text-slate-700 text-[10px] px-1.5 py-0.2 rounded-full font-bold">0</span>
+        </button>
+        <button onclick="changeTab('press')" id="tab-btn-press" class="tab-btn px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-medium text-slate-600 hover:text-wika-dark hover:bg-slate-100 flex items-center gap-2 transition-all">
+          <i class="fa-solid fa-bullhorn"></i>
+          <span>Planning Press Release</span>
+          <span id="tabCountPress" class="bg-slate-200 text-slate-700 text-[10px] px-1.5 py-0.2 rounded-full font-bold">0</span>
+        </button>
+        <button onclick="changeTab('docs')" id="tab-btn-docs" class="tab-btn px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-medium text-slate-600 hover:text-wika-dark hover:bg-slate-100 flex items-center gap-2 transition-all">
+          <i class="fa-solid fa-folder-open text-amber-500"></i>
+          <span>Pusat Berkas & Aset</span>
+          <span id="docBadgeCount" class="bg-amber-100 text-amber-800 text-[10px] px-1.5 py-0.2 rounded-full font-bold">0</span>
+        </button>
+      </div>
+
+      <!-- Search Control -->
+      <div class="flex items-center gap-2">
+        <div class="relative w-full md:w-64">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Cari materi, berkas, lini bisnis..." class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl pl-9 pr-3 py-2 text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-wika-cyan focus:bg-white transition">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- VIEW 1: KALENDER TRACKER INTERAKTIF -->
+    <section id="view-calendar" class="space-y-4">
+      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-6">
+        
+        <!-- Calendar Month Selector Header -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 bg-wika-navy/10 rounded-xl text-wika-navy text-lg">
+              <i class="fa-regular fa-calendar-check text-wika-cyan"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 id="calendarMonthTitle" class="text-base sm:text-lg font-bold text-wika-dark">Oktober 2026</h2>
+                <span id="calendarCountBadge" class="text-[11px] bg-cyan-50 text-wika-cyan font-semibold px-2 py-0.5 rounded-full border border-cyan-200">0 Agenda</span>
+              </div>
+              <p class="text-xs text-slate-500 font-medium">Kalender Pemantauan Publikasi Konten & Agenda WIKA Realty (Dapat bergulir tanpa batas)</p>
+            </div>
+          </div>
+
+          <!-- Dynamic Month & Year Navigation Controls -->
+          <div class="flex flex-wrap items-center gap-2 self-start lg:self-auto">
+            <div class="inline-flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/70 shadow-xs">
+              <button onclick="navigateMonth(-1)" title="Bulan Sebelumnya" class="p-1.5 px-2.5 rounded-lg text-slate-700 hover:bg-white hover:shadow-xs transition text-xs font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-chevron-left text-[11px]"></i>
+                <span class="hidden sm:inline">Sebelumnya</span>
+              </button>
+              <button onclick="goToCurrentMonth()" title="Lompat ke Bulan Ini" class="px-2.5 py-1.5 rounded-lg text-slate-600 hover:bg-white hover:shadow-xs transition text-xs font-medium">
+                Bulan Ini
+              </button>
+              <button onclick="navigateMonth(1)" title="Bulan Berikutnya" class="p-1.5 px-2.5 rounded-lg text-slate-700 hover:bg-white hover:shadow-xs transition text-xs font-semibold flex items-center gap-1">
+                <span class="hidden sm:inline">Berikutnya</span>
+                <i class="fa-solid fa-chevron-right text-[11px]"></i>
+              </button>
+            </div>
+
+            <!-- Dropdown Pilihan Cepat Bulan & Tahun -->
+            <div class="flex items-center gap-1.5">
+              <select id="selectMonth" onchange="onMonthYearDropdownChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-2.5 py-2 font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-wika-cyan">
+                <option value="0">Januari</option>
+                <option value="1">Februari</option>
+                <option value="2">Maret</option>
+                <option value="3">April</option>
+                <option value="4">Mei</option>
+                <option value="5">Juni</option>
+                <option value="6">Juli</option>
+                <option value="7">Agustus</option>
+                <option value="8">September</option>
+                <option value="9">Oktober</option>
+                <option value="10">November</option>
+                <option value="11">Desember</option>
+              </select>
+
+              <select id="selectYear" onchange="onMonthYearDropdownChange()" class="bg-slate-50 border border-slate-200 text-xs rounded-xl px-2.5 py-2 font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-wika-cyan">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Month Chips Strip -->
+        <div id="quickMonthChips" class="flex items-center gap-1.5 overflow-x-auto py-2 border-b border-slate-100 text-xs"></div>
+
+        <!-- Day Names -->
+        <div class="grid grid-cols-7 text-center font-bold text-xs text-slate-500 py-3 border-b border-slate-100 bg-slate-50/50 rounded-t-xl mt-3">
+          <div class="text-red-500">Minggu</div>
+          <div>Senin</div>
+          <div>Selasa</div>
+          <div>Rabu</div>
+          <div>Kamis</div>
+          <div>Jumat</div>
+          <div class="text-blue-600">Sabtu</div>
+        </div>
+
+        <!-- Dynamic Days Grid -->
+        <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1.5 sm:gap-2 mt-2"></div>
+
+        <!-- Legend -->
+        <div class="mt-6 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-600">
+          <div class="flex items-center gap-4 flex-wrap">
+            <span class="font-semibold text-slate-700">Lini Produk:</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span> Property</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-cyan-500"></span> Real Estat (High)</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Real Estat (Low)</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Hotel</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span> Building Mgt</span>
+            <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-700"></span> Corporate</span>
+          </div>
+          <span class="text-[11px] text-slate-400 italic">*Klik item untuk melihat rincian teks atau mengunduh berkas lampiran</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VIEW 2: TABEL KONTEN SOSIAL MEDIA -->
+    <section id="view-content" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+        
+        <!-- Table Toolbar -->
+        <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
+          <div>
+            <h3 class="font-bold text-wika-dark text-sm sm:text-base">Daftar Content Plan Social Media</h3>
+            <p class="text-xs text-slate-500">Rencana tayang media sosial lengkap dengan status produksi dan lampiran berkas dokumen</p>
+          </div>
+          
+          <!-- Filter Lini Bisnis & Status -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <select id="filterProduct" onchange="renderContentTable()" class="text-xs bg-white border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-wika-cyan">
+              <option value="ALL">Semua Lini Bisnis</option>
+              <option value="Property">Property</option>
+              <option value="Real Estat (High Rise)">Real Estat (High Rise)</option>
+              <option value="Real Estat (Low Rise)">Real Estat (Low Rise)</option>
+              <option value="Hotel & Hospitality">Hotel & Hospitality</option>
+              <option value="Building Management">Building Management</option>
+              <option value="Corporate">Corporate / WIKA Update</option>
+            </select>
+
+            <select id="filterStatus" onchange="renderContentTable()" class="text-xs bg-white border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-wika-cyan">
+              <option value="ALL">Semua Status</option>
+              <option value="Ready">Siap Tayang (Ready)</option>
+              <option value="In Progress">Dalam Desain/Video</option>
+              <option value="Review">Dalam Review</option>
+              <option value="Published">Sudah Published</option>
+              <option value="Ideasi">Ideasi / Draft</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Responsive Table Container -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="bg-wika-navy text-white uppercase text-[11px] font-semibold tracking-wider">
+              <tr>
+                <th class="py-3.5 px-4 w-12 text-center">No</th>
+                <th class="py-3.5 px-4 w-28">Tanggal</th>
+                <th class="py-3.5 px-4 w-28">Platform</th>
+                <th class="py-3.5 px-4 w-36">Lini Bisnis</th>
+                <th class="py-3.5 px-4 min-w-[200px]">Topik / Judul Konten</th>
+                <th class="py-3.5 px-4 w-24">Format</th>
+                <th class="py-3.5 px-4 w-36">Dokumen / Aset</th>
+                <th class="py-3.5 px-4 w-28 text-center">Status</th>
+                <th class="py-3.5 px-4 w-24">PIC</th>
+                <th class="py-3.5 px-4 w-24 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="contentTableBody" class="divide-y divide-slate-100 font-medium"></tbody>
+          </table>
+        </div>
+
+        <!-- Table Footer Summary -->
+        <div class="p-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+          <span id="contentCountText">Menampilkan data konten...</span>
+          <button onclick="openModal('content')" class="text-wika-cyan font-semibold hover:underline">
+            + Tambah Baris Konten Baru
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VIEW 3: PLANNING PRESS RELEASE TABLE -->
+    <section id="view-press" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+        
+        <!-- Table Toolbar -->
+        <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
+          <div>
+            <h3 class="font-bold text-wika-dark text-sm sm:text-base">Media Relations & Planning Press Release</h3>
+            <p class="text-xs text-slate-500">Pemberitaan korporat, publikasi produk properti, hotel, dan manajemen gedung</p>
+          </div>
+          <button onclick="openModal('press')" class="bg-wika-cyan hover:bg-wika-cyanHover text-white text-xs font-semibold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow-sm transition active:scale-95">
+            <i class="fa-solid fa-plus"></i> Tambah Siaran Pers
+          </button>
+        </div>
+
+        <!-- Responsive Press Release Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="bg-wika-navy text-white uppercase text-[11px] font-semibold tracking-wider">
+              <tr>
+                <th class="py-3.5 px-4 w-12 text-center">No</th>
+                <th class="py-3.5 px-4 w-28">Target Rilis</th>
+                <th class="py-3.5 px-4 w-36">Lini Bisnis</th>
+                <th class="py-3.5 px-4 min-w-[200px]">Topik / Judul Siaran Pers</th>
+                <th class="py-3.5 px-4 min-w-[170px]">Angle Berita / Key Message</th>
+                <th class="py-3.5 px-4 w-36">Berkas Draft / Link</th>
+                <th class="py-3.5 px-4 w-28 text-center">Progress</th>
+                <th class="py-3.5 px-4 w-24">Pickup Media</th>
+                <th class="py-3.5 px-4 w-24 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="pressTableBody" class="divide-y divide-slate-100 font-medium"></tbody>
+          </table>
+        </div>
+
+        <!-- Table Footer -->
+        <div class="p-3 bg-slate-50 border-t border-slate-100 text-xs text-slate-500 flex justify-between items-center">
+          <span id="pressCountText">Menampilkan daftar siaran pers...</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VIEW 4: PUSAT BERKAS & ASET TERORGANISASI -->
+    <section id="view-docs" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-6 space-y-5">
+        
+        <!-- Header & Filter Bar -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-sm font-bold">
+                <i class="fa-solid fa-folder-tree"></i>
+              </span>
+              <h3 class="font-bold text-wika-dark text-base">Pusat Berkas & Lampiran Dokumen WIKA Realty</h3>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">Seluruh file upload (PDF, Word, Excel, Gambar) & tautan drive terorganisir per lini bisnis</p>
+          </div>
+
+          <div class="flex items-center gap-2 flex-wrap">
+            <select id="docFilterLini" onchange="renderDocumentCenter()" class="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-wika-cyan font-medium">
+              <option value="ALL">Semua Lini Bisnis</option>
+              <option value="Property">Property</option>
+              <option value="Real Estat (High Rise)">Real Estat (High Rise)</option>
+              <option value="Real Estat (Low Rise)">Real Estat (Low Rise)</option>
+              <option value="Hotel & Hospitality">Hotel & Hospitality</option>
+              <option value="Building Management">Building Management</option>
+              <option value="Corporate">Corporate / WIKA</option>
+            </select>
+
+            <select id="docFilterType" onchange="renderDocumentCenter()" class="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-wika-cyan font-medium">
+              <option value="ALL">Semua Format File</option>
+              <option value="upload">Berkas Upload Lokal</option>
+              <option value="link">Tautan Cloud Drive</option>
+              <option value="image">Gambar / Foto</option>
+              <option value="doc">Dokumen (PDF/Word)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Quick Storage Stats -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-sm">
+              <i class="fa-solid fa-file-pdf"></i>
+            </div>
+            <div>
+              <p class="text-[10px] text-slate-500 uppercase font-semibold">Dokumen PDF/Word</p>
+              <h4 id="stat-doc-pdf" class="text-base font-bold text-slate-800">0</h4>
+            </div>
+          </div>
+
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm">
+              <i class="fa-solid fa-file-image"></i>
+            </div>
+            <div>
+              <p class="text-[10px] text-slate-500 uppercase font-semibold">Materi Visual/Foto</p>
+              <h4 id="stat-doc-img" class="text-base font-bold text-slate-800">0</h4>
+            </div>
+          </div>
+
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-cyan-100 text-cyan-600 flex items-center justify-center text-sm">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+            </div>
+            <div>
+              <p class="text-[10px] text-slate-500 uppercase font-semibold">Tautan Cloud Drive</p>
+              <h4 id="stat-doc-cloud" class="text-base font-bold text-slate-800">0</h4>
+            </div>
+          </div>
+
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-sm">
+              <i class="fa-solid fa-box-archive"></i>
+            </div>
+            <div>
+              <p class="text-[10px] text-slate-500 uppercase font-semibold">Total Item Berkas</p>
+              <h4 id="stat-doc-total" class="text-base font-bold text-slate-800">0</h4>
+            </div>
+          </div>
+        </div>
+
+        <!-- Document Cards Grid Container -->
+        <div id="documentsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 pt-2"></div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: Detail View Modal -->
+  <div id="detailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden border border-slate-100 animate-in fade-in zoom-in-95 duration-150">
+      <div class="bg-wika-navy text-white px-6 py-4 flex items-center justify-between">
+        <h4 id="detailModalTitle" class="font-bold text-sm">Rincian Informasi Konten</h4>
+        <button onclick="closeModal('detailModal')" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <div id="detailModalBody" class="p-6 space-y-4 text-xs leading-relaxed max-h-[75vh] overflow-y-auto"></div>
+      <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+        <button onclick="closeModal('detailModal')" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl text-xs transition">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Add/Edit Social Media Content with Direct File Upload -->
+  <div id="contentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl overflow-hidden border border-slate-100">
+      <div class="bg-wika-navy text-white px-6 py-4 flex items-center justify-between">
+        <h4 id="contentFormTitle" class="font-bold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-pen-to-square text-wika-cyan"></i>
+          <span>Tambah Konten Social Media</span>
+        </h4>
+        <button onclick="closeModal('contentModal')" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      
+      <form id="contentForm" onsubmit="saveContent(event)" class="p-6 space-y-4 text-xs max-h-[75vh] overflow-y-auto">
+        <input type="hidden" id="contentFormId">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Tanggal Tayang*</label>
+            <input type="date" id="contentDate" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Hari & Jam Posting</label>
+            <input type="text" id="contentTime" placeholder="Contoh: Kamis, 18.00 WIB" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Platform Target*</label>
+            <select id="contentPlatform" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+              <option value="Instagram">Instagram (Feed / Reels / Story)</option>
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="TikTok">TikTok</option>
+              <option value="YouTube">YouTube Shorts / Video</option>
+              <option value="Facebook">Facebook Page</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Lini Bisnis Produk*</label>
+            <select id="contentProduct" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+              <option value="Property">Property</option>
+              <option value="Real Estat (High Rise)">Real Estat (High Rise)</option>
+              <option value="Real Estat (Low Rise)">Real Estat (Low Rise)</option>
+              <option value="Hotel & Hospitality">Hotel & Hospitality</option>
+              <option value="Building Management">Building Management</option>
+              <option value="Corporate">Corporate / WIKA Update</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Topik / Judul Konten*</label>
+          <input type="text" id="contentTopic" required placeholder="Contoh: Showcase Fasilitas Sky Pool Apartemen Tamansari" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Format Konten</label>
+            <select id="contentFormat" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+              <option value="Reels/Video">Reels / Short Video</option>
+              <option value="Carousel">Carousel</option>
+              <option value="Single Image">Single Image</option>
+              <option value="Story">Story</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Status Produksi</label>
+            <select id="contentStatus" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+              <option value="Ready">Ready (Siap Tayang)</option>
+              <option value="In Progress">In Progress (Desain/Video)</option>
+              <option value="Review">Review</option>
+              <option value="Published">Published</option>
+              <option value="Ideasi">Ideasi</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">PIC / Penanggung Jawab</label>
+            <input type="text" id="contentPic" placeholder="Nama / Tim Medsos" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Draft Caption / Hook</label>
+          <textarea id="contentCaption" rows="2.5" placeholder="Tuliskan hook atau draft caption di sini..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Call to Action (CTA)</label>
+          <input type="text" id="contentCta" placeholder="Klik link di bio / Hubungi marketing" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+        </div>
+
+        <!-- Organized Document & Asset Upload Section -->
+        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-paperclip text-wika-cyan"></i>
+              <span>Lampiran Dokumen & Aset Desain</span>
+            </span>
+            <span class="text-[10px] text-slate-400">Dapat upload file atau beri link</span>
+          </div>
+
+          <!-- Direct File Upload Box -->
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Upload Berkas Langsung (PDF, DOCX, PNG, JPG, MP4):</label>
+            <div class="border-2 border-dashed border-slate-300 hover:border-wika-cyan rounded-xl p-3 text-center bg-white cursor-pointer transition" onclick="document.getElementById('contentFileInput').click()">
+              <input type="file" id="contentFileInput" multiple onchange="handleContentFileUpload(event)" class="hidden" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.xlsx,.pptx,.mp4">
+              <i class="fa-solid fa-cloud-arrow-up text-slate-400 text-lg mb-1 block"></i>
+              <p class="text-xs text-slate-700 font-medium">Klik untuk memilih dokumen / aset media</p>
+              <p class="text-[10px] text-slate-400">PDF, Word, Excel, Gambar Foto (Bisa lebih dari 1 file)</p>
+            </div>
+            <!-- Uploaded Files Preview Chips -->
+            <div id="contentAttachedFiles" class="flex flex-wrap gap-1.5 mt-2"></div>
+          </div>
+
+          <!-- Cloud Link Input -->
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Atau Tautan Google Drive / Cloud Link:</label>
+            <input type="text" id="contentAsset" placeholder="https://drive.google.com/drive/folders/..." class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeModal('contentModal')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-medium transition">Batal</button>
+          <button type="submit" class="px-5 py-2 bg-wika-cyan hover:bg-wika-cyanHover text-white font-semibold rounded-xl shadow-sm transition">Simpan Konten</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Add/Edit Press Release with Document Upload -->
+  <div id="pressModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl overflow-hidden border border-slate-100">
+      <div class="bg-wika-navy text-white px-6 py-4 flex items-center justify-between">
+        <h4 id="pressFormTitle" class="font-bold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-newspaper text-wika-cyan"></i>
+          <span>Tambah Siaran Pers (Press Release)</span>
+        </h4>
+        <button onclick="closeModal('pressModal')" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <form id="pressForm" onsubmit="savePress(event)" class="p-6 space-y-4 text-xs max-h-[75vh] overflow-y-auto">
+        <input type="hidden" id="pressFormId">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Target Tanggal Rilis*</label>
+            <input type="date" id="pressDate" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Lini Bisnis Produk*</label>
+            <select id="pressProduct" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+              <option value="Property">Property</option>
+              <option value="Corporate">Corporate / Kinerja & CSR</option>
+              <option value="Real Estat (High Rise)">Real Estat (High Rise)</option>
+              <option value="Real Estat (Low Rise)">Real Estat (Low Rise)</option>
+              <option value="Hotel & Hospitality">Hotel & Hospitality</option>
+              <option value="Building Management">Building Management</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Topik / Judul Siaran Pers*</label>
+          <input type="text" id="pressTopic" required placeholder="Contoh: WIKA Realty Catatkan Pertumbuhan Positif dan Perkuat Hunian Berkelanjutan" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Angle Berita / Key Message</label>
+          <textarea id="pressAngle" rows="2" placeholder="Pesan inti yang ingin diangkat di media massa..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Target Media Tier</label>
+            <input type="text" id="pressMediaTier" placeholder="Tier 1 Nasional / Bisnis" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Status Progress</label>
+            <select id="pressStatus" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+              <option value="Approved">Approved (Disetujui)</option>
+              <option value="Terdistribusi">Terdistribusi (Tayang)</option>
+              <option value="Review Internal">Review Direksi / Internal</option>
+              <option value="Drafting">Drafting</option>
+              <option value="Ideasi/Brief">Ideasi / Brief</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Media Pickup (Hasil)</label>
+            <input type="text" id="pressPickup" placeholder="Misal: 15 Media Online" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">PIC / Writer</label>
+          <input type="text" id="pressPic" placeholder="PR Team / Corcomm" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+        </div>
+
+        <!-- Organized Press Document Upload Section -->
+        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-file-lines text-wika-cyan"></i>
+              <span>Lampiran Naskah Siaran Pers (Docx / PDF)</span>
+            </span>
+            <span class="text-[10px] text-slate-400">Upload file naskah rilis</span>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Upload Berkas Siaran Pers Langsung:</label>
+            <div class="border-2 border-dashed border-slate-300 hover:border-wika-cyan rounded-xl p-3 text-center bg-white cursor-pointer transition" onclick="document.getElementById('pressFileInput').click()">
+              <input type="file" id="pressFileInput" multiple onchange="handlePressFileUpload(event)" class="hidden" accept=".pdf,.doc,.docx,.xlsx,.png,.jpg">
+              <i class="fa-solid fa-file-arrow-up text-slate-400 text-lg mb-1 block"></i>
+              <p class="text-xs text-slate-700 font-medium">Klik untuk upload dokumen draft rilis (Word/PDF)</p>
+              <p class="text-[10px] text-slate-400">File akan tersimpan langsung di sistem portal</p>
+            </div>
+            <div id="pressAttachedFiles" class="flex flex-wrap gap-1.5 mt-2"></div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Atau Tautan Google Docs / Media Drive:</label>
+            <input type="text" id="pressDocLink" placeholder="https://docs.google.com/document/d/..." class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:ring-2 focus:ring-wika-cyan focus:outline-none">
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeModal('pressModal')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-medium transition">Batal</button>
+          <button type="submit" class="px-5 py-2 bg-wika-cyan hover:bg-wika-cyanHover text-white font-semibold rounded-xl shadow-sm transition">Simpan Siaran Pers</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed bottom-6 right-6 z-50 space-y-2 pointer-events-none"></div>
+
+  <script>
+    /* Temporary attachments buffers for active modals */
+    let tempContentAttachments = [];
+    let tempPressAttachments = [];
+
+    // Initial dataset for PT Wijaya Karya Realty with attachments
+    let contentList = [
+      {
+        id: 'cnt-1',
+        date: '2026-10-15',
+        time: 'Kamis, 18.00 WIB',
+        platform: 'Instagram',
+        product: 'Real Estat (High Rise)',
+        topic: 'Showcase Fasilitas Hunian Vertikal Apartemen Tamansari',
+        format: 'Reels/Video',
+        caption: 'Rasakan kenyamanan hidup modern dengan fasilitas sky pool dan akses strategis di Tamansari. Hunian vertikal premium persembahan WIKA Realty.',
+        cta: 'Kunjungi link di bio untuk virtual tour & promo KPA khusus bulan ini!',
+        hashtags: '#WIKARealty #ApartemenTamansari #HighRiseLiving #HunianVertikal',
+        assetLink: 'https://drive.google.com/drive/folders/wika-tamansari-oct',
+        attachments: [
+          { name: 'Katalog_Tamansari_TowerA.pdf', size: '2.4 MB', type: 'application/pdf', dataUrl: null },
+          { name: 'Preview_SkyPool_HighRes.jpg', size: '1.8 MB', type: 'image/jpeg', dataUrl: null }
+        ],
+        status: 'Ready',
+        pic: 'Tim Medsos'
+      },
+      {
+        id: 'cnt-2',
+        date: '2026-10-28',
+        time: 'Rabu, 09.00 WIB',
+        platform: 'LinkedIn',
+        product: 'Corporate',
+        topic: 'WIKA Update: Semangat Hari Sumpah Pemuda & Karya Anak Bangsa',
+        format: 'Carousel',
+        caption: 'Membangun negeri melalui karya properti berkualitas dan berkelanjutan. Selamat Hari Sumpah Pemuda dari keluarga besar PT Wijaya Karya Realty.',
+        cta: 'Pelajari kiprah dan portofolio kami di wikarealty.co.id',
+        hashtags: '#SumpahPemuda #BUMNUntukIndonesia #WIKARealty #KaryaAnakBangsa',
+        assetLink: 'https://drive.google.com/drive/folders/wika-corporate-sp',
+        attachments: [
+          { name: 'Naskah_Caption_Direksi.docx', size: '420 KB', type: 'application/docx', dataUrl: null }
+        ],
+        status: 'Ready',
+        pic: 'Corporate Comm'
+      },
+      {
+        id: 'cnt-3',
+        date: '2026-11-10',
+        time: 'Selasa, 11.30 WIB',
+        platform: 'Instagram',
+        product: 'Hotel & Hospitality',
+        topic: 'Promo Staycation Hari Pahlawan & Paket Liburan Akhir Pekan',
+        format: 'Single Image',
+        caption: 'Rayakan momen liburan berkesan bersama keluarga dengan fasilitas hotel bintang persembahan WIKA Realty. Diskon spesial hingga 25%!',
+        cta: 'Direct booking via website atau hubungi reservasi kami sekarang.',
+        hashtags: '#WIKAHospitality #StaycationPromo #HotelWIKA #LiburanNyaman',
+        assetLink: 'https://drive.google.com/drive/folders/hotel-promo-nov',
+        attachments: [
+          { name: 'Flyer_Promo_Staycation.png', size: '1.2 MB', type: 'image/png', dataUrl: null }
+        ],
+        status: 'In Progress',
+        pic: 'Marketing Hotel'
+      },
+      {
+        id: 'cnt-4',
+        date: '2026-11-20',
+        time: 'Jumat, 16.00 WIB',
+        platform: 'TikTok',
+        product: 'Real Estat (Low Rise)',
+        topic: 'House Tour: Cluster Baru Hunian Tapak Berkonsep Eco-Living',
+        format: 'Reels/Video',
+        caption: 'Spill rumah idaman ramah anak dan asri! Cluster terbaru dengan cicilan fleksibel dan DP 0%. Cocok banget buat first-home buyer milenial.',
+        cta: 'Komen "MAU" untuk dapat e-brochure lengkapnya!',
+        hashtags: '#RumahTapak #LowRise #RumahMilenial #WIKARealtyProperty',
+        assetLink: 'https://drive.google.com/drive/folders/lowrise-housetour',
+        attachments: [],
+        status: 'Ideasi',
+        pic: 'Kreatif Video'
+      },
+      {
+        id: 'cnt-5',
+        date: '2026-12-05',
+        time: 'Sabtu, 10.00 WIB',
+        platform: 'LinkedIn',
+        product: 'Building Management',
+        topic: 'Inovasi Smart Green Facility Management pada Gedung Kelolaan WIKA',
+        format: 'Carousel',
+        caption: 'Pengelolaan gedung bukan hanya tentang pemeliharaan teknis, melainkan komitmen efisiensi energi dan kenyamanan optimal para tenant.',
+        cta: 'Hubungi divisi Building Management WIKA Realty untuk konsultasi fasilitas properti Anda.',
+        hashtags: '#BuildingManagement #SmartFacility #GreenBuilding #WIKARealty',
+        assetLink: 'https://drive.google.com/drive/folders/bm-green-building',
+        attachments: [
+          { name: 'Presentasi_Green_Facility.pdf', size: '3.1 MB', type: 'application/pdf', dataUrl: null }
+        ],
+        status: 'Review',
+        pic: 'Divisi BM'
+      },
+      {
+        id: 'cnt-6',
+        date: '2026-12-22',
+        time: 'Selasa, 17.00 WIB',
+        platform: 'Instagram',
+        product: 'Real Estat (High Rise)',
+        topic: 'Spesial Year-End Promo Fest: Beli Apartemen Bebas PPN & Subsidi Bunga',
+        format: 'Single Image',
+        caption: 'Tutup tahun 2026 dengan memiliki aset hunian bernilai investasi tinggi. Dapatkan penawaran terbatas subsidi bunga dan kemudahan serah terima unit.',
+        cta: 'Amankan unit pilihan Anda sebelum promo berakhir tanggal 31 Desember!',
+        hashtags: '#YearEndPromo #ApartemenSiapHuni #InvestasiProperti #WIKARealty',
+        assetLink: 'https://drive.google.com/drive/folders/yearend-promo-2026',
+        attachments: [],
+        status: 'Ideasi',
+        pic: 'Tim Medsos'
+      }
+    ];
+
+    let pressList = [
+      {
+        id: 'prs-1',
+        date: '2026-10-18',
+        product: 'Corporate',
+        topic: 'WIKA Realty Perkuat Kinerja Berkelanjutan dan Tata Kelola GCG Kuartal IV 2026',
+        angle: 'Penguatan transparansi finansial, efisiensi operasional proyek, dan reputasi BUMN terpercaya.',
+        mediaTier: 'Tier 1 Nasional & Bisnis',
+        status: 'Review Internal',
+        pic: 'Corcomm Lead',
+        pickup: '12 Media Online',
+        docLink: 'https://docs.google.com/document/d/wika-pr-q4-kinerja',
+        attachments: [
+          { name: 'PressRelease_Final_Draft_KinerjaQ4.docx', size: '640 KB', type: 'application/docx', dataUrl: null },
+          { name: 'Lampiran_Infografis_Keuangan.pdf', size: '1.5 MB', type: 'application/pdf', dataUrl: null }
+        ]
+      },
+      {
+        id: 'prs-2',
+        date: '2026-11-12',
+        product: 'Real Estat (High Rise)',
+        topic: 'Topping Off Menara Hunian Tamansari Bukti Komitmen Ketepatan Waktu Serah Terima',
+        angle: 'Ketepatan progres konstruksi di tengah dinamika pasar dan tingginya minat konsumen hunian vertikal.',
+        mediaTier: 'Media Properti & Bisnis',
+        status: 'Approved',
+        pic: 'PR Specialist',
+        pickup: '8 Portal Berita',
+        docLink: 'https://docs.google.com/document/d/wika-pr-topping-off',
+        attachments: [
+          { name: 'Rilis_Pers_Topping_Off_Tamansari.pdf', size: '1.1 MB', type: 'application/pdf', dataUrl: null }
+        ]
+      },
+      {
+        id: 'prs-3',
+        date: '2026-12-08',
+        product: 'Building Management',
+        topic: 'Transformasi Digital dan Efisiensi Energi Unit Building Management WIKA Realty Raih Sertifikasi Hijau',
+        angle: 'Standarisasi smart maintenance dan komitmen pengurangan jejak karbon pada portofolio gedung komersial.',
+        mediaTier: 'Media Nasional & Lingkungan',
+        status: 'Drafting',
+        pic: 'Corcomm Officer',
+        pickup: 'Dalam Proses',
+        docLink: 'https://docs.google.com/document/d/wika-pr-green-bm',
+        attachments: []
+      }
+    ];
+
+    // Calendar state
+    let activeCalendarMonth = 9; // October (0-indexed)
+    let activeCalendarYear = 2026;
+
+    const indonesianMonths = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+
+    window.onload = function() {
+      populateYearDropdown();
+      updateCounters();
+      renderCalendar();
+      renderContentTable();
+      renderPressTable();
+      renderDocumentCenter();
+    };
+
+    /* Counter update helper */
+    function animateCount(elementId, targetValue) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      el.innerText = targetValue;
+    }
+
+    function populateYearDropdown() {
+      const yearSelect = document.getElementById('selectYear');
+      if (!yearSelect) return;
+      yearSelect.innerHTML = '';
+      const startYear = 2025;
+      const endYear = 2032;
+      for (let y = startYear; y <= endYear; y++) {
+        const opt = document.createElement('option');
+        opt.value = y;
+        opt.innerText = y;
+        if (y === activeCalendarYear) opt.selected = true;
+        yearSelect.appendChild(opt);
+      }
+    }
+
+    function changeTab(tabName) {
+      document.getElementById('view-calendar').classList.add('hidden');
+      document.getElementById('view-content').classList.add('hidden');
+      document.getElementById('view-press').classList.add('hidden');
+      document.getElementById('view-docs').classList.add('hidden');
+
+      const tabs = ['calendar', 'content', 'press', 'docs'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (btn) {
+          btn.classList.remove('bg-wika-navy', 'text-white', 'shadow-sm');
+          btn.classList.add('text-slate-600', 'hover:bg-slate-100');
+        }
+      });
+
+      const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-600', 'hover:bg-slate-100');
+        activeBtn.classList.add('bg-wika-navy', 'text-white', 'shadow-sm');
+      }
+
+      document.getElementById(`view-${tabName}`).classList.remove('hidden');
+
+      if (tabName === 'calendar') {
+        renderCalendar();
+      } else if (tabName === 'docs') {
+        renderDocumentCenter();
+      }
+    }
+
+    function updateCounters() {
+      const totalContent = contentList.length;
+      const propCount = contentList.filter(c => c.product && c.product === 'Property').length;
+      const reCount = contentList.filter(c => c.product && c.product.includes('Real Estat')).length;
+      const hotelCount = contentList.filter(c => c.product && c.product.includes('Hotel')).length;
+      const bmCount = contentList.filter(c => c.product && c.product.includes('Building Management')).length;
+      const prCount = pressList.length;
+
+      // Update Top KPI Bar Cards
+      animateCount('stat-total', totalContent);
+      animateCount('stat-prop', propCount);
+      animateCount('stat-re', reCount);
+      animateCount('stat-hotel', hotelCount);
+      animateCount('stat-bm', bmCount);
+      animateCount('stat-pr', prCount);
+
+      // Update Tab Pill Counters
+      const tabContentEl = document.getElementById('tabCountContent');
+      const tabPressEl = document.getElementById('tabCountPress');
+      if (tabContentEl) tabContentEl.innerText = totalContent;
+      if (tabPressEl) tabPressEl.innerText = prCount;
+
+      // Update total documents badge
+      let docCount = 0;
+      contentList.forEach(c => {
+        if (c.attachments) docCount += c.attachments.length;
+        if (c.assetLink) docCount += 1;
+      });
+      pressList.forEach(p => {
+        if (p.attachments) docCount += p.attachments.length;
+        if (p.docLink) docCount += 1;
+      });
+      const docBadge = document.getElementById('docBadgeCount');
+      if (docBadge) docBadge.innerText = docCount;
+    }
+
+    function handleContentFileUpload(event) {
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
+
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          tempContentAttachments.push({
+            name: file.name,
+            size: formatFileSize(file.size),
+            type: file.type || 'document',
+            dataUrl: e.target.result
+          });
+          renderTempContentAttachments();
+        };
+        reader.readAsDataURL(file);
+      });
+      event.target.value = '';
+    }
+
+    function handlePressFileUpload(event) {
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
+
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          tempPressAttachments.push({
+            name: file.name,
+            size: formatFileSize(file.size),
+            type: file.type || 'document',
+            dataUrl: e.target.result
+          });
+          renderTempPressAttachments();
+        };
+        reader.readAsDataURL(file);
+      });
+      event.target.value = '';
+    }
+
+    function renderTempContentAttachments() {
+      const container = document.getElementById('contentAttachedFiles');
+      if (!container) return;
+      container.innerHTML = '';
+      tempContentAttachments.forEach((att, idx) => {
+        const chip = document.createElement('div');
+        chip.className = 'inline-flex items-center gap-1.5 bg-cyan-50 border border-cyan-200 text-cyan-900 px-2 py-1 rounded-lg text-[11px] font-medium';
+        chip.innerHTML = `
+          ${getFileIcon(att.name, att.type)}
+          <span class="max-w-[150px] truncate" title="${att.name}">${att.name}</span>
+          <span class="text-[9px] text-cyan-600 font-normal">(${att.size})</span>
+          <button type="button" onclick="removeTempContentAtt(${idx})" class="text-cyan-500 hover:text-red-500 ml-1">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        `;
+        container.appendChild(chip);
+      });
+    }
+
+    function renderTempPressAttachments() {
+      const container = document.getElementById('pressAttachedFiles');
+      if (!container) return;
+      container.innerHTML = '';
+      tempPressAttachments.forEach((att, idx) => {
+        const chip = document.createElement('div');
+        chip.className = 'inline-flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-blue-900 px-2 py-1 rounded-lg text-[11px] font-medium';
+        chip.innerHTML = `
+          ${getFileIcon(att.name, att.type)}
+          <span class="max-w-[150px] truncate" title="${att.name}">${att.name}</span>
+          <span class="text-[9px] text-blue-600 font-normal">(${att.size})</span>
+          <button type="button" onclick="removeTempPressAtt(${idx})" class="text-blue-500 hover:text-red-500 ml-1">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        `;
+        container.appendChild(chip);
+      });
+    }
+
+    function removeTempContentAtt(index) {
+      tempContentAttachments.splice(index, 1);
+      renderTempContentAttachments();
+    }
+
+    function removeTempPressAtt(index) {
+      tempPressAttachments.splice(index, 1);
+      renderTempPressAttachments();
+    }
+
+    function formatFileSize(bytes) {
+      if (typeof bytes === 'string') return bytes;
+      if (!bytes || bytes === 0) return '0 B';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+
+    function getFileIcon(fileName, fileType) {
+      const lower = (fileName || '').toLowerCase();
+      if (lower.endsWith('.pdf') || (fileType && fileType.includes('pdf'))) {
+        return '<i class="fa-solid fa-file-pdf text-red-500"></i>';
+      }
+      if (lower.endsWith('.doc') || lower.endsWith('.docx') || (fileType && fileType.includes('word'))) {
+        return '<i class="fa-solid fa-file-word text-blue-600"></i>';
+      }
+      if (lower.endsWith('.xls') || lower.endsWith('.xlsx') || (fileType && fileType.includes('excel') || fileType.includes('spreadsheet'))) {
+        return '<i class="fa-solid fa-file-excel text-emerald-600"></i>';
+      }
+      if (lower.endsWith('.png') || lower.endsWith('.jpg') || lower.endsWith('.jpeg') || (fileType && fileType.includes('image'))) {
+        return '<i class="fa-solid fa-file-image text-amber-500"></i>';
+      }
+      if (lower.endsWith('.mp4') || (fileType && fileType.includes('video'))) {
+        return '<i class="fa-solid fa-file-video text-purple-600"></i>';
+      }
+      return '<i class="fa-solid fa-file text-slate-500"></i>';
+    }
+
+    function downloadFile(dataUrl, fileName) {
+      if (!dataUrl) {
+        showToast('File contoh simulasi (Upload file asli untuk mengunduh)');
+        return;
+      }
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function navigateMonth(direction) {
+      activeCalendarMonth += direction;
+      if (activeCalendarMonth > 11) {
+        activeCalendarMonth = 0;
+        activeCalendarYear += 1;
+      } else if (activeCalendarMonth < 0) {
+        activeCalendarMonth = 11;
+        activeCalendarYear -= 1;
+      }
+      ensureYearInDropdown(activeCalendarYear);
+      renderCalendar();
+    }
+
+    function setCalendarMonthYear(monthIndex, year) {
+      activeCalendarMonth = monthIndex;
+      activeCalendarYear = year;
+      ensureYearInDropdown(year);
+      renderCalendar();
+    }
+
+    function goToCurrentMonth() {
+      const today = new Date();
+      activeCalendarMonth = today.getMonth();
+      activeCalendarYear = today.getFullYear();
+      ensureYearInDropdown(activeCalendarYear);
+      renderCalendar();
+    }
+
+    function onMonthYearDropdownChange() {
+      const selectedMonth = parseInt(document.getElementById('selectMonth').value, 10);
+      const selectedYear = parseInt(document.getElementById('selectYear').value, 10);
+      activeCalendarMonth = selectedMonth;
+      activeCalendarYear = selectedYear;
+      renderCalendar();
+    }
+
+    function ensureYearInDropdown(year) {
+      const yearSelect = document.getElementById('selectYear');
+      if (!yearSelect) return;
+      let exists = false;
+      for (let i = 0; i < yearSelect.options.length; i++) {
+        if (parseInt(yearSelect.options[i].value, 10) === year) {
+          exists = true;
+          break;
+        }
+      }
+      if (!exists) {
+        const opt = document.createElement('option');
+        opt.value = year;
+        opt.innerText = year;
+        yearSelect.appendChild(opt);
+      }
+      yearSelect.value = year;
+    }
+
+    function renderQuickMonthChips() {
+      const container = document.getElementById('quickMonthChips');
+      if (!container) return;
+      container.innerHTML = '';
+
+      for (let i = -1; i <= 4; i++) {
+        let targetMonth = activeCalendarMonth + i;
+        let targetYear = activeCalendarYear;
+
+        while (targetMonth < 0) {
+          targetMonth += 12;
+          targetYear -= 1;
+        }
+        while (targetMonth > 11) {
+          targetMonth -= 12;
+          targetYear += 1;
+        }
+
+        const isCurrentActive = (targetMonth === activeCalendarMonth && targetYear === activeCalendarYear);
+        const btn = document.createElement('button');
+        btn.onclick = () => setCalendarMonthYear(targetMonth, targetYear);
+        btn.className = `px-3 py-1 rounded-lg font-medium whitespace-nowrap transition text-xs ${
+          isCurrentActive 
+            ? 'bg-wika-navy text-white shadow-xs font-semibold' 
+            : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+        }`;
+        btn.innerText = `${indonesianMonths[targetMonth].substring(0, 3)} ${targetYear}`;
+        container.appendChild(btn);
+      }
+    }
+
+    function renderCalendar() {
+      const grid = document.getElementById('calendarDaysGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const year = activeCalendarYear;
+      const month = activeCalendarMonth;
+
+      document.getElementById('calendarMonthTitle').innerText = `${indonesianMonths[month]} ${year}`;
+      document.getElementById('selectMonth').value = month;
+      ensureYearInDropdown(year);
+      renderQuickMonthChips();
+
+      const monthPrefix = `${year}-${String(month + 1).padStart(2, '0')}`;
+      const countThisMonth = contentList.filter(c => c.date.startsWith(monthPrefix)).length + 
+                             pressList.filter(p => p.date.startsWith(monthPrefix)).length;
+      document.getElementById('calendarCountBadge').innerText = `${countThisMonth} Agenda Terjadwal`;
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      for (let i = 0; i < firstDay; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'min-h-[90px] sm:min-h-[115px] p-1.5 sm:p-2 bg-slate-50/40 rounded-xl border border-dashed border-slate-200/50 opacity-40';
+        grid.appendChild(emptyCell);
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const dayContents = contentList.filter(c => c.date === formattedDate);
+        const dayPress = pressList.filter(p => p.date === formattedDate);
+
+        const dayCell = document.createElement('div');
+        dayCell.className = `min-h-[90px] sm:min-h-[115px] p-2 bg-white rounded-xl border transition-all flex flex-col justify-between ${
+          dayContents.length > 0 || dayPress.length > 0 
+            ? 'border-wika-cyan/50 shadow-xs hover:border-wika-cyan hover:shadow-md' 
+            : 'border-slate-200 hover:border-slate-300'
+        }`;
+
+        let dayHtml = `
+          <div class="flex items-center justify-between pb-1 border-b border-slate-100 mb-1">
+            <span class="text-xs font-bold ${
+              new Date(year, month, day).getDay() === 0 ? 'text-red-500' : 'text-slate-700'
+            }">${day}</span>
+            <button onclick="quickAddDate('${formattedDate}')" title="Jadwalkan materi di tanggal ini" class="text-[10px] text-slate-300 hover:text-wika-cyan hover:bg-slate-100 w-5 h-5 rounded flex items-center justify-center transition">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
+          <div class="space-y-1 overflow-y-auto max-h-[75px] pr-0.5">
+        `;
+
+        dayContents.forEach(item => {
+          let badgeColor = 'bg-cyan-50 border-cyan-400 text-cyan-800';
+          if (item.product === 'Property') badgeColor = 'bg-indigo-50 border-indigo-400 text-indigo-800';
+          else if (item.product.includes('Low')) badgeColor = 'bg-emerald-50 border-emerald-400 text-emerald-800';
+          else if (item.product.includes('Hotel')) badgeColor = 'bg-amber-50 border-amber-400 text-amber-800';
+          else if (item.product.includes('Building')) badgeColor = 'bg-purple-50 border-purple-400 text-purple-800';
+          else if (item.product.includes('Corporate')) badgeColor = 'bg-blue-50 border-blue-700 text-blue-900';
+
+          const hasAtt = item.attachments && item.attachments.length > 0;
+
+          dayHtml += `
+            <div onclick="showContentDetail('${item.id}')" class="cursor-pointer p-1.5 rounded-lg border-l-2 text-[10px] leading-tight ${badgeColor} hover:brightness-95 transition shadow-2xs">
+              <div class="font-bold truncate flex items-center justify-between">
+                <span>${item.platform}: ${item.topic}</span>
+                ${hasAtt ? '<i class="fa-solid fa-paperclip text-[9px] ml-1 opacity-70"></i>' : ''}
+              </div>
+              <div class="flex items-center justify-between mt-0.5 text-[9px] opacity-80">
+                <span>${item.format}</span>
+                <span class="font-semibold">${item.status}</span>
+              </div>
+            </div>
+          `;
+        });
+
+        dayPress.forEach(pr => {
+          const hasAtt = pr.attachments && pr.attachments.length > 0;
+          dayHtml += `
+            <div onclick="showPressDetail('${pr.id}')" class="cursor-pointer p-1.5 rounded-lg border-l-2 border-red-500 bg-rose-50 text-rose-900 text-[10px] leading-tight hover:brightness-95 transition shadow-2xs">
+              <div class="font-bold truncate flex items-center justify-between">
+                <span><i class="fa-solid fa-newspaper mr-1"></i>${pr.topic}</span>
+                ${hasAtt ? '<i class="fa-solid fa-paperclip text-[9px] ml-1 opacity-70"></i>' : ''}
+              </div>
+              <div class="text-[9px] opacity-80 mt-0.5">${pr.status}</div>
+            </div>
+          `;
+        });
+
+        dayHtml += `</div>`;
+        dayCell.innerHTML = dayHtml;
+        grid.appendChild(dayCell);
+      }
+    }
+
+    function renderContentTable(filtered = null) {
+      const tbody = document.getElementById('contentTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      let items = filtered !== null ? filtered : [...contentList];
+
+      const productFilter = document.getElementById('filterProduct') ? document.getElementById('filterProduct').value : 'ALL';
+      const statusFilter = document.getElementById('filterStatus') ? document.getElementById('filterStatus').value : 'ALL';
+
+      if (filtered === null) {
+        if (productFilter !== 'ALL') items = items.filter(c => c.product === productFilter);
+        if (statusFilter !== 'ALL') items = items.filter(c => c.status === statusFilter);
+      }
+
+      document.getElementById('contentCountText').innerText = `Menampilkan ${items.length} dari ${contentList.length} konten`;
+
+      if (items.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="10" class="text-center py-8 text-slate-400">
+              <i class="fa-regular fa-folder-open text-2xl mb-2 block"></i>
+              Tidak ada konten yang sesuai dengan filter atau kata kunci.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      items.forEach((item, index) => {
+        let statusBadge = 'bg-slate-100 text-slate-700';
+        if (item.status === 'Ready') statusBadge = 'bg-emerald-100 text-emerald-800';
+        if (item.status === 'In Progress') statusBadge = 'bg-amber-100 text-amber-800';
+        if (item.status === 'Review') statusBadge = 'bg-blue-100 text-blue-800';
+        if (item.status === 'Published') statusBadge = 'bg-cyan-100 text-cyan-800';
+
+        // File and asset preview chips
+        let assetHtml = '<span class="text-slate-400 text-[10px]">-</span>';
+        if (item.attachments && item.attachments.length > 0) {
+          assetHtml = `
+            <div class="flex flex-col gap-1 max-w-[170px]">
+              ${item.attachments.map(att => `
+                <div class="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded text-[10px] text-slate-700 font-medium truncate cursor-pointer" onclick="downloadFile('${att.dataUrl}', '${att.name}')" title="Klik untuk unduh: ${att.name}">
+                  ${getFileIcon(att.name, att.type)}
+                  <span class="truncate">${att.name}</span>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        } else if (item.assetLink) {
+          assetHtml = `
+            <a href="${item.assetLink}" target="_blank" class="inline-flex items-center gap-1 text-[11px] text-wika-cyan font-semibold hover:underline">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Drive Link
+            </a>
+          `;
+        }
+
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-slate-50 transition border-b border-slate-100';
+        row.innerHTML = `
+          <td class="py-3 px-4 text-center text-slate-400 font-normal">${index + 1}</td>
+          <td class="py-3 px-4 font-semibold text-slate-700 whitespace-nowrap">${formatDisplayDate(item.date)}</td>
+          <td class="py-3 px-4">
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px]">
+              <i class="fa-solid fa-layer-group text-wika-cyan"></i>
+              ${item.platform}
+            </span>
+          </td>
+          <td class="py-3 px-4">
+            <span class="font-semibold text-slate-800">${item.product}</span>
+          </td>
+          <td class="py-3 px-4">
+            <div class="font-bold text-slate-800 hover:text-wika-cyan cursor-pointer transition" onclick="showContentDetail('${item.id}')">${item.topic}</div>
+            <div class="text-[11px] text-slate-400 truncate max-w-xs mt-0.5">${item.caption ? item.caption.substring(0, 50) + '...' : '-'}</div>
+          </td>
+          <td class="py-3 px-4 text-slate-600">${item.format}</td>
+          <td class="py-3 px-4">${assetHtml}</td>
+          <td class="py-3 px-4 text-center">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${statusBadge}">${item.status}</span>
+          </td>
+          <td class="py-3 px-4 text-slate-600">${item.pic || '-'}</td>
+          <td class="py-3 px-4 text-center whitespace-nowrap">
+            <div class="inline-flex items-center gap-1.5">
+              <button onclick="editContent('${item.id}')" title="Edit Konten & Berkas" class="p-1.5 text-slate-400 hover:text-wika-navy hover:bg-slate-200 rounded-lg transition">
+                <i class="fa-solid fa-pen-to-square text-xs"></i>
+              </button>
+              <button onclick="deleteContent('${item.id}')" title="Hapus Konten" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition">
+                <i class="fa-solid fa-trash text-xs"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function renderPressTable(filtered = null) {
+      const tbody = document.getElementById('pressTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      let items = filtered !== null ? filtered : [...pressList];
+      document.getElementById('pressCountText').innerText = `Menampilkan ${items.length} dari ${pressList.length} siaran pers`;
+
+      if (items.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9" class="text-center py-8 text-slate-400">
+              <i class="fa-regular fa-newspaper text-2xl mb-2 block"></i>
+              Tidak ada data siaran pers yang sesuai.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      items.forEach((pr, index) => {
+        let statusBadge = 'bg-slate-100 text-slate-700';
+        if (pr.status === 'Approved') statusBadge = 'bg-emerald-100 text-emerald-800';
+        if (pr.status === 'Review Internal') statusBadge = 'bg-amber-100 text-amber-800';
+        if (pr.status === 'Terdistribusi') statusBadge = 'bg-cyan-100 text-cyan-800';
+        if (pr.status === 'Drafting') statusBadge = 'bg-blue-100 text-blue-800';
+
+        let docHtml = '<span class="text-slate-400 text-[10px]">-</span>';
+        if (pr.attachments && pr.attachments.length > 0) {
+          docHtml = `
+            <div class="flex flex-col gap-1 max-w-[170px]">
+              ${pr.attachments.map(att => `
+                <div class="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded text-[10px] text-slate-700 font-medium truncate cursor-pointer" onclick="downloadFile('${att.dataUrl}', '${att.name}')" title="Klik untuk unduh naskah">
+                  ${getFileIcon(att.name, att.type)}
+                  <span class="truncate">${att.name}</span>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        } else if (pr.docLink) {
+          docHtml = `
+            <a href="${pr.docLink}" target="_blank" class="inline-flex items-center gap-1 text-[11px] text-wika-cyan font-semibold hover:underline">
+              <i class="fa-solid fa-file-lines"></i> Docs Link
+            </a>
+          `;
+        }
+
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-slate-50 transition border-b border-slate-100';
+        row.innerHTML = `
+          <td class="py-3 px-4 text-center text-slate-400">${index + 1}</td>
+          <td class="py-3 px-4 font-semibold text-slate-700 whitespace-nowrap">${formatDisplayDate(pr.date)}</td>
+          <td class="py-3 px-4 font-semibold text-slate-800">${pr.product}</td>
+          <td class="py-3 px-4">
+            <div class="font-bold text-slate-800 hover:text-wika-cyan cursor-pointer transition" onclick="showPressDetail('${pr.id}')">${pr.topic}</div>
+          </td>
+          <td class="py-3 px-4 text-slate-600 max-w-xs truncate">${pr.angle || '-'}</td>
+          <td class="py-3 px-4">${docHtml}</td>
+          <td class="py-3 px-4 text-center">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${statusBadge}">${pr.status}</span>
+          </td>
+          <td class="py-3 px-4 font-semibold text-emerald-700">${pr.pickup || '0'}</td>
+          <td class="py-3 px-4 text-center whitespace-nowrap">
+            <div class="inline-flex items-center gap-1.5">
+              <button onclick="editPress('${pr.id}')" title="Edit Siaran Pers" class="p-1.5 text-slate-400 hover:text-wika-navy hover:bg-slate-200 rounded-lg transition">
+                <i class="fa-solid fa-pen-to-square text-xs"></i>
+              </button>
+              <button onclick="deletePress('${pr.id}')" title="Hapus Siaran Pers" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition">
+                <i class="fa-solid fa-trash text-xs"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function renderDocumentCenter() {
+      const container = document.getElementById('documentsGrid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const filterLini = document.getElementById('docFilterLini') ? document.getElementById('docFilterLini').value : 'ALL';
+      const filterType = document.getElementById('docFilterType') ? document.getElementById('docFilterType').value : 'ALL';
+
+      let allDocs = [];
+
+      // Collect from contentList
+      contentList.forEach(c => {
+        if (c.attachments && c.attachments.length > 0) {
+          c.attachments.forEach(att => {
+            allDocs.push({
+              sourceType: 'Konten Medsos',
+              topic: c.topic,
+              product: c.product,
+              date: c.date,
+              fileName: att.name,
+              fileSize: att.size,
+              mimeType: att.type,
+              isUpload: true,
+              dataUrl: att.dataUrl,
+              externalUrl: null
+            });
+          });
+        }
+        if (c.assetLink) {
+          allDocs.push({
+            sourceType: 'Konten Medsos',
+            topic: c.topic,
+            product: c.product,
+            date: c.date,
+            fileName: 'Cloud Drive Folder (' + c.platform + ')',
+            fileSize: 'Cloud',
+            mimeType: 'link',
+            isUpload: false,
+            dataUrl: null,
+            externalUrl: c.assetLink
+          });
+        }
+      });
+
+      // Collect from pressList
+      pressList.forEach(p => {
+        if (p.attachments && p.attachments.length > 0) {
+          p.attachments.forEach(att => {
+            allDocs.push({
+              sourceType: 'Siaran Pers',
+              topic: p.topic,
+              product: p.product,
+              date: p.date,
+              fileName: att.name,
+              fileSize: att.size,
+              mimeType: att.type,
+              isUpload: true,
+              dataUrl: att.dataUrl,
+              externalUrl: null
+            });
+          });
+        }
+        if (p.docLink) {
+          allDocs.push({
+            sourceType: 'Siaran Pers',
+            topic: p.topic,
+            product: p.product,
+            date: p.date,
+            fileName: 'Dokumen Google Docs Rilis',
+            fileSize: 'Cloud Docs',
+            mimeType: 'link',
+            isUpload: false,
+            dataUrl: null,
+            externalUrl: p.docLink
+          });
+        }
+      });
+
+      // Update metrics
+      document.getElementById('stat-doc-total').innerText = allDocs.length;
+      document.getElementById('stat-doc-pdf').innerText = allDocs.filter(d => (d.fileName.toLowerCase().endsWith('.pdf') || d.fileName.toLowerCase().endsWith('.docx') || d.fileName.toLowerCase().endsWith('.doc'))).length;
+      document.getElementById('stat-doc-img').innerText = allDocs.filter(d => (d.fileName.toLowerCase().endsWith('.jpg') || d.fileName.toLowerCase().endsWith('.png') || d.fileName.toLowerCase().endsWith('.jpeg'))).length;
+      document.getElementById('stat-doc-cloud').innerText = allDocs.filter(d => !d.isUpload).length;
+
+      // Filter
+      let filteredDocs = allDocs;
+      if (filterLini !== 'ALL') {
+        filteredDocs = filteredDocs.filter(d => d.product.includes(filterLini));
+      }
+      if (filterType === 'upload') {
+        filteredDocs = filteredDocs.filter(d => d.isUpload);
+      } else if (filterType === 'link') {
+        filteredDocs = filteredDocs.filter(d => !d.isUpload);
+      } else if (filterType === 'image') {
+        filteredDocs = filteredDocs.filter(d => (d.fileName.toLowerCase().endsWith('.jpg') || d.fileName.toLowerCase().endsWith('.png') || d.fileName.toLowerCase().endsWith('.jpeg')));
+      } else if (filterType === 'doc') {
+        filteredDocs = filteredDocs.filter(d => (d.fileName.toLowerCase().endsWith('.pdf') || d.fileName.toLowerCase().endsWith('.docx') || d.fileName.toLowerCase().endsWith('.doc')));
+      }
+
+      if (filteredDocs.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-400">
+            <i class="fa-solid fa-folder-open text-3xl mb-2 block"></i>
+            <p class="font-medium">Belum ada berkas atau dokumen yang cocok dengan filter.</p>
+          </div>
+        `;
+        return;
+      }
+
+      filteredDocs.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'p-3.5 bg-slate-50/70 hover:bg-white rounded-xl border border-slate-200/80 hover:border-wika-cyan/50 hover:shadow-md transition flex flex-col justify-between';
+        
+        let actionBtn = '';
+        if (item.isUpload) {
+          actionBtn = `
+            <button onclick="downloadFile('${item.dataUrl}', '${item.fileName}')" class="px-2.5 py-1 bg-wika-cyan hover:bg-wika-cyanHover text-white rounded-lg text-[10px] font-semibold flex items-center gap-1 transition">
+              <i class="fa-solid fa-download"></i> Unduh
+            </button>
+          `;
+        } else {
+          actionBtn = `
+            <a href="${item.externalUrl}" target="_blank" class="px-2.5 py-1 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg text-[10px] font-semibold flex items-center gap-1 transition">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Link
+            </a>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-base shadow-2xs">
+                  ${getFileIcon(item.fileName, item.mimeType)}
+                </span>
+                <div class="max-w-[170px]">
+                  <h4 class="font-bold text-slate-800 text-xs truncate" title="${item.fileName}">${item.fileName}</h4>
+                  <span class="text-[10px] text-slate-400">${item.fileSize}</span>
+                </div>
+              </div>
+              <span class="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-cyan-100 text-cyan-800">${item.sourceType}</span>
+            </div>
+
+            <div class="p-2 bg-white rounded-lg border border-slate-100 text-[10px]">
+              <span class="text-slate-400 block text-[9px]">Terkait Materi:</span>
+              <p class="font-semibold text-slate-700 truncate" title="${item.topic}">${item.topic}</p>
+            </div>
+          </div>
+
+          <div class="pt-3 mt-3 border-t border-slate-200/60 flex items-center justify-between text-[10px] text-slate-500">
+            <span class="truncate max-w-[120px] font-medium">${item.product}</span>
+            ${actionBtn}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function handleSearch() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      if (!query) {
+        renderContentTable();
+        renderPressTable();
+        return;
+      }
+
+      const filteredContent = contentList.filter(c => 
+        c.topic.toLowerCase().includes(query) ||
+        c.product.toLowerCase().includes(query) ||
+        c.platform.toLowerCase().includes(query) ||
+        c.status.toLowerCase().includes(query) ||
+        (c.caption && c.caption.toLowerCase().includes(query)) ||
+        (c.attachments && c.attachments.some(a => a.name.toLowerCase().includes(query)))
+      );
+
+      const filteredPress = pressList.filter(p => 
+        p.topic.toLowerCase().includes(query) ||
+        p.product.toLowerCase().includes(query) ||
+        p.status.toLowerCase().includes(query) ||
+        (p.angle && p.angle.toLowerCase().includes(query)) ||
+        (p.attachments && p.attachments.some(a => a.name.toLowerCase().includes(query)))
+      );
+
+      renderContentTable(filteredContent);
+      renderPressTable(filteredPress);
+    }
+
+    function openModal(type) {
+      const defaultDate = `${activeCalendarYear}-${String(activeCalendarMonth + 1).padStart(2, '0')}-15`;
+
+      if (type === 'content') {
+        document.getElementById('contentFormTitle').innerHTML = '<i class="fa-solid fa-pen-to-square text-wika-cyan"></i><span>Tambah Konten Social Media</span>';
+        document.getElementById('contentForm').reset();
+        document.getElementById('contentFormId').value = '';
+        document.getElementById('contentDate').value = defaultDate;
+        tempContentAttachments = [];
+        renderTempContentAttachments();
+        const m = document.getElementById('contentModal');
+        m.classList.remove('hidden');
+      } else if (type === 'press') {
+        document.getElementById('pressFormTitle').innerHTML = '<i class="fa-solid fa-newspaper text-wika-cyan"></i><span>Tambah Siaran Pers (Press Release)</span>';
+        document.getElementById('pressForm').reset();
+        document.getElementById('pressFormId').value = '';
+        document.getElementById('pressDate').value = defaultDate;
+        tempPressAttachments = [];
+        renderTempPressAttachments();
+        const m = document.getElementById('pressModal');
+        m.classList.remove('hidden');
+      }
+    }
+
+    function quickAddDate(selectedDate) {
+      openModal('content');
+      document.getElementById('contentDate').value = selectedDate;
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.add('hidden');
+    }
+
+    function saveContent(event) {
+      event.preventDefault();
+      const id = document.getElementById('contentFormId').value;
+      const date = document.getElementById('contentDate').value;
+      const time = document.getElementById('contentTime').value;
+      const platform = document.getElementById('contentPlatform').value;
+      const product = document.getElementById('contentProduct').value;
+      const topic = document.getElementById('contentTopic').value;
+      const format = document.getElementById('contentFormat').value;
+      const status = document.getElementById('contentStatus').value;
+      const pic = document.getElementById('contentPic').value;
+      const caption = document.getElementById('contentCaption').value;
+      const cta = document.getElementById('contentCta').value;
+      const assetLink = document.getElementById('contentAsset').value;
+      const attachments = [...tempContentAttachments];
+
+      if (id) {
+        const index = contentList.findIndex(c => c.id === id);
+        if (index !== -1) {
+          contentList[index] = { ...contentList[index], date, time, platform, product, topic, format, status, pic, caption, cta, assetLink, attachments };
+          showToast('Konten & lampiran berhasil diperbarui!');
+        }
+      } else {
+        const newId = 'cnt-' + Date.now();
+        contentList.push({
+          id: newId, date, time, platform, product, topic, format, status, pic, caption, cta, assetLink, attachments,
+          hashtags: '#WIKARealty #PropertiBUMN'
+        });
+        showToast('Konten baru & berkas berhasil disimpan!');
+      }
+
+      closeModal('contentModal');
+      updateCounters();
+      renderCalendar();
+      renderContentTable();
+      renderDocumentCenter();
+    }
+
+    function editContent(id) {
+      const item = contentList.find(c => c.id === id);
+      if (!item) return;
+
+      document.getElementById('contentFormTitle').innerHTML = '<i class="fa-solid fa-pen-to-square text-wika-cyan"></i><span>Edit Konten & Berkas</span>';
+      document.getElementById('contentFormId').value = item.id;
+      document.getElementById('contentDate').value = item.date;
+      document.getElementById('contentTime').value = item.time || '';
+      document.getElementById('contentPlatform').value = item.platform;
+      document.getElementById('contentProduct').value = item.product;
+      document.getElementById('contentTopic').value = item.topic;
+      document.getElementById('contentFormat').value = item.format;
+      document.getElementById('contentStatus').value = item.status;
+      document.getElementById('contentPic').value = item.pic || '';
+      document.getElementById('contentCaption').value = item.caption || '';
+      document.getElementById('contentCta').value = item.cta || '';
+      document.getElementById('contentAsset').value = item.assetLink || '';
+      tempContentAttachments = item.attachments ? [...item.attachments] : [];
+      renderTempContentAttachments();
+
+      document.getElementById('contentModal').classList.remove('hidden');
+    }
+
+    function deleteContent(id) {
+      showActionConfirmation('Hapus Konten Ini?', 'Data konten dan lampiran berkas ini akan dihapus dari rekap.', () => {
+        contentList = contentList.filter(c => c.id !== id);
+        updateCounters();
+        renderCalendar();
+        renderContentTable();
+        renderDocumentCenter();
+        showToast('Konten berhasil dihapus.');
+      });
+    }
+
+    function savePress(event) {
+      event.preventDefault();
+      const id = document.getElementById('pressFormId').value;
+      const date = document.getElementById('pressDate').value;
+      const product = document.getElementById('pressProduct').value;
+      const topic = document.getElementById('pressTopic').value;
+      const angle = document.getElementById('pressAngle').value;
+      const mediaTier = document.getElementById('pressMediaTier').value;
+      const status = document.getElementById('pressStatus').value;
+      const pickup = document.getElementById('pressPickup').value;
+      const pic = document.getElementById('pressPic').value;
+      const docLink = document.getElementById('pressDocLink').value;
+      const attachments = [...tempPressAttachments];
+
+      if (id) {
+        const idx = pressList.findIndex(p => p.id === id);
+        if (idx !== -1) {
+          pressList[idx] = { ...pressList[idx], date, product, topic, angle, mediaTier, status, pickup, pic, docLink, attachments };
+          showToast('Siaran Pers & naskah berhasil diperbarui!');
+        }
+      } else {
+        const newId = 'prs-' + Date.now();
+        pressList.push({
+          id: newId, date, product, topic, angle, mediaTier, status, pickup, pic, docLink, attachments
+        });
+        showToast('Siaran Pers baru berhasil dijadwalkan!');
+      }
+
+      closeModal('pressModal');
+      updateCounters();
+      renderCalendar();
+      renderPressTable();
+      renderDocumentCenter();
+    }
+
+    function editPress(id) {
+      const pr = pressList.find(p => p.id === id);
+      if (!pr) return;
+
+      document.getElementById('pressFormTitle').innerHTML = '<i class="fa-solid fa-newspaper text-wika-cyan"></i><span>Edit Siaran Pers & Berkas</span>';
+      document.getElementById('pressFormId').value = pr.id;
+      document.getElementById('pressDate').value = pr.date;
+      document.getElementById('pressProduct').value = pr.product;
+      document.getElementById('pressTopic').value = pr.topic;
+      document.getElementById('pressAngle').value = pr.angle || '';
+      document.getElementById('pressMediaTier').value = pr.mediaTier || '';
+      document.getElementById('pressStatus').value = pr.status;
+      document.getElementById('pressPickup').value = pr.pickup || '';
+      document.getElementById('pressPic').value = pr.pic || '';
+      document.getElementById('pressDocLink').value = pr.docLink || '';
+      tempPressAttachments = pr.attachments ? [...pr.attachments] : [];
+      renderTempPressAttachments();
+
+      document.getElementById('pressModal').classList.remove('hidden');
+    }
+
+    function deletePress(id) {
+      showActionConfirmation('Hapus Siaran Pers?', 'Siaran pers ini beserta lampiran dokumennya akan dihapus.', () => {
+        pressList = pressList.filter(p => p.id !== id);
+        updateCounters();
+        renderCalendar();
+        renderPressTable();
+        renderDocumentCenter();
+        showToast('Siaran pers berhasil dihapus.');
+      });
+    }
+
+    function showContentDetail(id) {
+      const item = contentList.find(c => c.id === id);
+      if (!item) return;
+
+      let attachmentsHtml = '';
+      if (item.attachments && item.attachments.length > 0) {
+        attachmentsHtml = `
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80">
+            <span class="font-bold text-slate-700 block mb-2"><i class="fa-solid fa-paperclip text-wika-cyan"></i> Berkas Lampiran Tersedia:</span>
+            <div class="space-y-1.5">
+              ${item.attachments.map(att => `
+                <div class="flex items-center justify-between p-2 bg-white rounded-lg border border-slate-200">
+                  <div class="flex items-center gap-2 truncate">
+                    ${getFileIcon(att.name, att.type)}
+                    <span class="font-semibold text-slate-800 text-xs truncate">${att.name}</span>
+                    <span class="text-[10px] text-slate-400">(${att.size})</span>
+                  </div>
+                  <button onclick="downloadFile('${att.dataUrl}', '${att.name}')" class="px-2 py-1 bg-wika-cyan hover:bg-wika-cyanHover text-white rounded text-[10px] font-semibold flex items-center gap-1 transition">
+                    <i class="fa-solid fa-download"></i> Unduh
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      document.getElementById('detailModalTitle').innerText = 'Rincian Konten Social Media';
+      document.getElementById('detailModalBody').innerHTML = `
+        <div class="space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <span class="px-2.5 py-1 rounded-lg font-bold text-xs bg-cyan-50 text-cyan-800">${item.product}</span>
+            <span class="font-semibold text-slate-500">${formatDisplayDate(item.date)} • ${item.time || 'Waktu Belum Diset'}</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800 text-sm mb-1">${item.topic}</h4>
+            <div class="flex items-center gap-2 text-slate-500 text-[11px]">
+              <span><i class="fa-solid fa-layer-group text-wika-cyan"></i> ${item.platform}</span>
+              <span>•</span>
+              <span>Format: <b>${item.format}</b></span>
+              <span>•</span>
+              <span>Status: <b class="text-emerald-700">${item.status}</b></span>
+            </div>
+          </div>
+          ${item.caption ? `
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80">
+              <span class="font-bold text-slate-700 block mb-1">Draft Copywriting / Caption:</span>
+              <p class="text-slate-600 whitespace-pre-line">${item.caption}</p>
+            </div>
+          ` : ''}
+          ${item.cta ? `
+            <div class="flex items-start gap-2 text-slate-700">
+              <span class="font-semibold text-wika-dark">CTA:</span>
+              <span>${item.cta}</span>
+            </div>
+          ` : ''}
+          ${attachmentsHtml}
+          ${item.assetLink ? `
+            <div class="p-2.5 bg-blue-50/60 rounded-xl border border-blue-100 flex items-center justify-between">
+              <span class="text-blue-900 font-semibold"><i class="fa-brands fa-google-drive text-blue-600"></i> Google Drive Cloud Link</span>
+              <a href="${item.assetLink}" target="_blank" class="text-wika-cyan font-bold hover:underline text-[11px] flex items-center gap-1">
+                Buka Link <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
+            </div>
+          ` : ''}
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+            <span>PIC: <b>${item.pic || '-'}</b></span>
+            <span>ID: <code class="text-slate-400">${item.id}</code></span>
+          </div>
+        </div>
+      `;
+
+      const m = document.getElementById('detailModal');
+      m.classList.remove('hidden');
+    }
+
+    function showPressDetail(id) {
+      const pr = pressList.find(p => p.id === id);
+      if (!pr) return;
+
+      let attachmentsHtml = '';
+      if (pr.attachments && pr.attachments.length > 0) {
+        attachmentsHtml = `
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80">
+            <span class="font-bold text-slate-700 block mb-2"><i class="fa-solid fa-file-lines text-wika-cyan"></i> Naskah Rilis Terlampir:</span>
+            <div class="space-y-1.5">
+              ${pr.attachments.map(att => `
+                <div class="flex items-center justify-between p-2 bg-white rounded-lg border border-slate-200">
+                  <div class="flex items-center gap-2 truncate">
+                    ${getFileIcon(att.name, att.type)}
+                    <span class="font-semibold text-slate-800 text-xs truncate">${att.name}</span>
+                    <span class="text-[10px] text-slate-400">(${att.size})</span>
+                  </div>
+                  <button onclick="downloadFile('${att.dataUrl}', '${att.name}')" class="px-2 py-1 bg-wika-cyan hover:bg-wika-cyanHover text-white rounded text-[10px] font-semibold flex items-center gap-1 transition">
+                    <i class="fa-solid fa-download"></i> Unduh
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      document.getElementById('detailModalTitle').innerText = 'Rincian Siaran Pers (Press Release)';
+      document.getElementById('detailModalBody').innerHTML = `
+        <div class="space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <span class="px-2.5 py-1 rounded-lg font-bold text-xs bg-slate-100 text-slate-800">${pr.product}</span>
+            <span class="font-semibold text-slate-500">Target Rilis: ${formatDisplayDate(pr.date)}</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800 text-sm mb-1">${pr.topic}</h4>
+            <p class="text-slate-500 text-[11px]">Media Target: <b>${pr.mediaTier}</b> • Status: <b class="text-blue-700">${pr.status}</b></p>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80">
+            <span class="font-bold text-slate-700 block mb-1">Key Message & Angle Berita:</span>
+            <p class="text-slate-600">${pr.angle || '-'}</p>
+          </div>
+          ${attachmentsHtml}
+          ${pr.docLink ? `
+            <div class="p-2.5 bg-blue-50/60 rounded-xl border border-blue-100 flex items-center justify-between">
+              <span class="text-blue-900 font-semibold"><i class="fa-regular fa-file-word text-blue-600"></i> Google Docs Naskah Rilis</span>
+              <a href="${pr.docLink}" target="_blank" class="text-wika-cyan font-bold hover:underline text-[11px] flex items-center gap-1">
+                Buka Dokumen <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
+            </div>
+          ` : ''}
+          <div class="flex items-center justify-between text-[11px] text-slate-600">
+            <span>PIC: <b>${pr.pic || '-'}</b></span>
+            <span>Pickup Media: <b class="text-emerald-700">${pr.pickup || '0'}</b></span>
+          </div>
+        </div>
+      `;
+
+      const m = document.getElementById('detailModal');
+      m.classList.remove('hidden');
+    }
+
+    function showActionConfirmation(title, message, onConfirm) {
+      const overlay = document.createElement('div');
+      overlay.className = 'fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4';
+      overlay.innerHTML = `
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4">
+          <div class="w-12 h-12 bg-red-100 text-red-600 rounded-2xl mx-auto flex items-center justify-center text-xl">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800 text-base">${title}</h4>
+            <p class="text-xs text-slate-500 mt-1">${message}</p>
+          </div>
+          <div class="flex items-center gap-2 pt-2">
+            <button id="cancelConfirmBtn" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">Batal</button>
+            <button id="okConfirmBtn" class="flex-1 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl text-xs transition shadow-sm">Ya, Hapus</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      overlay.querySelector('#cancelConfirmBtn').onclick = () => overlay.remove();
+      overlay.querySelector('#okConfirmBtn').onclick = () => {
+        overlay.remove();
+        onConfirm();
+      };
+    }
+
+    function showToast(message) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'bg-wika-dark text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 text-xs border border-slate-700/80 pointer-events-auto transform translate-y-2 opacity-0 transition-all duration-200';
+      toast.innerHTML = `
+        <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+        <span class="font-medium">${message}</span>
+      `;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 10);
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 250);
+      }, 3500);
+    }
+
+    function formatDisplayDate(dateStr) {
+      if (!dateStr) return '-';
+      const parts = dateStr.split('-');
+      if (parts.length !== 3) return dateStr;
+      const day = parts[2];
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+      const month = months[parseInt(parts[1], 10) - 1];
+      const year = parts[0];
+      return `${day} ${month} ${year}`;
+    }
+
+    function exportToCSV() {
+      let csvContent = "data:text/csv;charset=utf-8,";
+      csvContent += "No,Tanggal Tayang,Hari & Jam,Platform,Lini Bisnis,Topik Konten,Format,Status,PIC,Caption Hook,Lampiran Berkas,Link Cloud\n";
+
+      contentList.forEach((item, idx) => {
+        const clean = str => `"${(str || '').replace(/"/g, '""')}"`;
+        const attNames = item.attachments ? item.attachments.map(a => a.name).join("; ") : '';
+        const row = [
+          idx + 1,
+          clean(item.date),
+          clean(item.time),
+          clean(item.platform),
+          clean(item.product),
+          clean(item.topic),
+          clean(item.format),
+          clean(item.status),
+          clean(item.pic),
+          clean(item.caption),
+          clean(attNames),
+          clean(item.assetLink)
+        ].join(",");
+        csvContent += row + "\n";
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `WIKA_Realty_Content_Plan_${activeCalendarYear}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast("Data perencanaan konten & daftar berkas berhasil diekspor ke CSV!");
+    }
+  </script>
+</body>
+</html>
